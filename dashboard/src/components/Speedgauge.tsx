@@ -1,23 +1,19 @@
 import React from "react";
 import * as d3 from 'd3';
+import { degToRad, scale } from "./circleUtils";
+import cssClasses from './css/SpeedGauge.module.css';
 
-interface MyD3ComponentProps {
+interface SpeedGaugeProps {
 	speed: number;
 };
 
-const degToRad = (deg: number): number => (deg * Math.PI) / 180;
-const scale = (value: number, to: number): number => {
-	const sl = d3.scaleLinear().range([0, 1]).domain([0, to]);
-	return sl(value);
-}
-
-class MyD3Component extends React.Component<MyD3ComponentProps, {}> {
+class SpeedGauge extends React.Component<SpeedGaugeProps, {}> {
 	renderd: boolean = false;
 	myRef: React.RefObject<HTMLInputElement>;
 	needle!: d3.Selection<SVGPathElement, number[][], null, undefined>;
     speedText!: d3.Selection<SVGTextElement, unknown, null, undefined>;
 
-	constructor(props: MyD3ComponentProps) {
+	constructor(props: SpeedGaugeProps) {
 		super(props);
 		this.myRef = React.createRef();
 	}
@@ -27,8 +23,10 @@ class MyD3Component extends React.Component<MyD3ComponentProps, {}> {
 			return;
 		}
 
-		const svg = d3.select(this.myRef.current).append('svg').attr('width', '400px').attr('height', '400px');
-        const g = svg.append('g').attr('transform', `translate(200, 200)`);
+		const dialRadius = 450;
+
+		const svg = d3.select(this.myRef.current).append('svg').attr('width', `${dialRadius*2}px`).attr('height', `${dialRadius*2}px`);
+        const g = svg.append('g').attr('transform', `translate(${dialRadius}, ${dialRadius})`);
 
         const colors = ['#D1D1D1', '#AFAFAF', '#FFFFFF', '#FD3104', '#171717', '#0A0A0A'];
         const ticksData = [
@@ -52,7 +50,7 @@ class MyD3Component extends React.Component<MyD3ComponentProps, {}> {
             { value: 300, visible: false, color: '#FFFFFF' }
         ];
 
-        const radius = 200; // width / 2
+        const radius = dialRadius; // width / 2
 
 		// gradients
 		const defs = svg.append('defs');
@@ -68,7 +66,7 @@ class MyD3Component extends React.Component<MyD3ComponentProps, {}> {
 		gradient.append('stop').attr('offset', '100%').attr('stop-color', colors[5]).attr('stop-opacity', 1);
 	
 		// outer circle
-		const outerRadius = 200 - 10;
+		const outerRadius = radius - 10;
 		const innerRadius = 0;
 	
 		const circle = d3.arc()
@@ -99,6 +97,12 @@ class MyD3Component extends React.Component<MyD3ComponentProps, {}> {
 		  	}, [] as number[])
 		  	.filter((d: number) => d % 5 === 0 && d <= 300);
 
+		const widthAllTicks    = 5;
+		const lengthShortTicks = 27;
+		const lengthLongTicks  = 50;
+		const paddindToOuterCircleShortTicks = 12;
+		const paddindToOuterCircleLongTicks  = 35;
+		
 		lg.selectAll('line')
 			.data(ticks)
 			.enter()
@@ -107,16 +111,21 @@ class MyD3Component extends React.Component<MyD3ComponentProps, {}> {
 			.attr('x1', 0)
 			.attr('y1', 0)
 			.attr('x2', 0)
-			.attr('y2', (d: number) => (d % 20 === 0 || d === 0 ? '12' : '7'))
+			.attr('y2', (d: number) => (d % 20 === 0 || d === 0 ? `${lengthLongTicks}` : `${lengthShortTicks}`))
 			.attr('transform', (d: number) => {
 				const ratio = scale(d, 300);
 				const newAngle = minAngle + ratio * angleRange;
-				const deviation = d % 20 === 0 || d === 0 ? 12 : 17;
+				const deviation = d % 20 === 0 || d === 0 ? paddindToOuterCircleShortTicks : paddindToOuterCircleLongTicks;
 				return `rotate(${newAngle}) translate(0, ${deviation - radius})`;
 			})
 			.style('stroke', (d: number) => (d === 30 || d === 50 ? colors[3] : colors[2]))
-			.style('stroke-width', (d: number) => (d % 5 === 0 || d === 0 ? '3' : '1'));
+			.style('stroke-width', (d: number) => (d % 5 === 0 || d === 0 ? `${widthAllTicks}` : '1'));
 	
+		const paddingLowNumbersToOuterCircle = 100;
+		const paddingHighNumbersToOuterCircle = 110;
+		const fontSizeRedNumbers = 30;
+		const fontSizeWhiteNumbers = 40;
+
 		// ticks text
 		lg.selectAll('text')
 			.data(ticksData)
@@ -125,7 +134,7 @@ class MyD3Component extends React.Component<MyD3ComponentProps, {}> {
 			.attr('transform', (d: { value: number; color: string }) => {
 				const ratio = scale(d.value, 300);
 				const newAngle = degToRad(minAngle + ratio * angleRange);
-				const deviation = d.value === 30 || d.value === 50 ? 45 : 50;
+				const deviation = (d.value < 100 ? paddingLowNumbersToOuterCircle : paddingHighNumbersToOuterCircle);
 				const y = (deviation - radius) * Math.cos(newAngle);
 				const x = -1 * (deviation - radius) * Math.sin(newAngle);
 				return `translate(${x}, ${y + 7})`;
@@ -133,7 +142,7 @@ class MyD3Component extends React.Component<MyD3ComponentProps, {}> {
 			.text((d: { value: number; color: string }) => (d.value !== 0 ? d.value : ''))
 			.attr('fill', (d: { value: number; color: string }) => d.color)
 			.attr('font-size', (d: { value: number; color: string }) => {
-				return d.value === 30 || d.value === 50 ? '16' : '20';
+				return d.value === 30 || d.value === 50 ? `${fontSizeRedNumbers}` : `${fontSizeWhiteNumbers}`;
 			})
 			.attr('text-anchor', 'middle');
 	
@@ -149,7 +158,7 @@ class MyD3Component extends React.Component<MyD3ComponentProps, {}> {
 			.data([lineData])
 			.attr('class', 'pointer')
 			.attr('stroke', colors[3])
-			.attr('stroke-width', '6')
+			.attr('stroke-width', '10')
 			.attr('stroke-linecap', 'round')
 			.attr('transform', `translate(${radius}, ${radius})`)
 			.attr('z-index', '1');
@@ -159,7 +168,7 @@ class MyD3Component extends React.Component<MyD3ComponentProps, {}> {
 		// inner circle
 		const tg = svg.append('g').attr('transform', `translate(${radius}, ${radius})`);
 	
-		const innerArcOuterRadius = radius - 80;
+		const innerArcOuterRadius = radius - 170;
 		const innerArcInnerRadius = 0;
 	
 		const innerArc = d3.arc()
@@ -183,27 +192,28 @@ class MyD3Component extends React.Component<MyD3ComponentProps, {}> {
 			.attr('text-anchor', 'middle')
 			.attr('fill', colors[2])
 			.attr('x', '0')
-			.attr('y', '10px')
+			.attr('y', '25px')
 			.style('position', 'absolute')
 			.style('z-index', '10');
 	
 		// km/h text
 		tg.append('text')
 			.text('km/h')
-			.attr('font-size', '16')
+			.attr('font-size', '50')
 			.attr('text-anchor', 'middle')
 			.attr('fill', colors[2])
 			.attr('x', '0')
-			.attr('y', '45px')
+			.attr('y', '110px')
 			.style('position', 'absolute')
 			.style('z-index', '10');
 
-		this.renderd = true;
+		this.setValue(0);
 
-		this.setValue(0, 10);
+		this.renderd = true;
 	}
 
-	private setValue(value: number, duration: number): void {
+	setValue = (value: number) => {
+		const refreshRate = 10;
 		const minAngle = -160;
 		const maxAngle = 150;
 		const angleRange = maxAngle - minAngle;
@@ -213,7 +223,7 @@ class MyD3Component extends React.Component<MyD3ComponentProps, {}> {
 	
 		d3.transition()
 			.select(() => this.needle.node())
-			.duration(duration)
+			.duration(refreshRate)
 			.ease(d3.easeCubicInOut)
 			.attr('transform', `rotate(${angle})`);
 	}
@@ -223,13 +233,12 @@ class MyD3Component extends React.Component<MyD3ComponentProps, {}> {
 			return;
 		}
 	  
-		const refreshRate = 10;
-		this.setValue(this.props.speed, refreshRate);
+		this.setValue(this.props.speed);
 	}
 
 	render() {
-		return <div ref={this.myRef}/>;
+		return <div className={cssClasses.dial} ref={this.myRef}/>;
 	}
 }
 
-export default MyD3Component;
+export default SpeedGauge;

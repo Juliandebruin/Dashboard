@@ -1,11 +1,11 @@
 import "./App.css";
-import DisplayGauge from "./components/DisplayGauge";
+import Dials from "./components/Dials";
 
 function App() {
 	return (
 		<div className="App">
 			<header className="App-header">
-				<DisplayGauge/>
+				<Dials/>
 			</header>
 		</div>
 	);
