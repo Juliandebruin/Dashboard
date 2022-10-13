@@ -1,6 +1,6 @@
 import React from "react";
 import * as d3 from 'd3';
-import { degToRad, scale } from "./circleUtils";
+import { degToRad, scale } from "../utils/circleUtils";
 import cssClasses from './css/SpeedGauge.module.css';
 
 interface SpeedGaugeProps {

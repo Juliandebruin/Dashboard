@@ -1,6 +1,6 @@
 import React from "react";
 import * as d3 from 'd3';
-import { degToRad, scale } from "./circleUtils";
+import { degToRad, scale } from "../utils/circleUtils";
 
 interface RpmGaugeProps {
 	rpm: number;
@@ -195,29 +195,29 @@ class RPMGauge extends React.Component <RpmGaugeProps, {}>{
             .style('position', 'absolute')
             .style('z-index', '10');
 
-        // // lights icon
-        // tg.append('image')
-        //     .attr('xlink:href', '/assets/images/lights.svg')
-        //     .attr('x', '10px')
-        //     .attr('y', '134px')
-        //     .attr('width', '35px')
-        //     .attr('height', '35px');
+        // lights icon
+        tg.append('image')
+            .attr('href', '/assets/images/lights.svg')
+            .attr('x', '0px')
+            .attr('y', '340px')
+            .attr('width', '35px')
+            .attr('height', '35px');
 
-        // // seat belt icon
-        // tg.append('image')
-        //     .attr('xlink:href', '/assets/images/seat-belt.svg')
-        //     .attr('x', '56px')
-        //     .attr('y', '120px')
-        //     .attr('width', '30px')
-        //     .attr('height', '30px');
+        // seat belt icon
+        tg.append('image')
+            .attr('xlink:href', '/assets/images/seat-belt.svg')
+            .attr('x', '56px')
+            .attr('y', '120px')
+            .attr('width', '30px')
+            .attr('height', '30px');
 
-        // // rear window defrost icon
-        // tg.append('image')
-        //     .attr('xlink:href', '/assets/images/rear-window-defrost.svg')
-        //     .attr('x', '95px')
-        //     .attr('y', '95px')
-        //     .attr('width', '30px')
-        //     .attr('height', '30px');
+        // rear window defrost icon
+        tg.append('image')
+            .attr('xlink:href', '/assets/images/rear-window-defrost.svg')
+            .attr('x', '95px')
+            .attr('y', '95px')
+            .attr('width', '30px')
+            .attr('height', '30px');
 
         this.renderd = true;
     }
