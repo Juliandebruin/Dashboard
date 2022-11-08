@@ -1,0 +1,16 @@
+.layoutDiv {
+    width: 100%;
+    height: 100%;
+}
+
+.dialLeft {
+    position: absolute;
+    bottom: 100px;
+    left: 100px;
+}
+
+.dialRight {
+    position: absolute;
+    bottom: 100px;
+    right: 100px;
+}
