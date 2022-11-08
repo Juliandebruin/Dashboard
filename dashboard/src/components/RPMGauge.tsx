@@ -197,9 +197,9 @@ class RPMGauge extends React.Component <RpmGaugeProps, {}>{
 
         // lights icon
         tg.append('image')
-            .attr('href', '/assets/images/lights.svg')
-            .attr('x', '0px')
-            .attr('y', '340px')
+            .attr('xlink:href', '/assets/images/lights.svg')
+            // .attr('x', '0px')
+            // .attr('y', '340px')
             .attr('width', '35px')
             .attr('height', '35px');
 

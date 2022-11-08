@@ -97,9 +97,9 @@ class SpeedGauge extends React.Component<SpeedGaugeProps, {}> {
 		  	}, [] as number[])
 		  	.filter((d: number) => d % 5 === 0 && d <= 300);
 
-		const widthAllTicks    = 5;
-		const lengthShortTicks = 27;
-		const lengthLongTicks  = 50;
+		const widthAllTicks    = 4;
+		const lengthShortTicks = 20;
+		const lengthLongTicks  = 45;
 		const paddindToOuterCircleShortTicks = 12;
 		const paddindToOuterCircleLongTicks  = 35;
 		
@@ -123,8 +123,8 @@ class SpeedGauge extends React.Component<SpeedGaugeProps, {}> {
 	
 		const paddingLowNumbersToOuterCircle = 100;
 		const paddingHighNumbersToOuterCircle = 110;
-		const fontSizeRedNumbers = 30;
-		const fontSizeWhiteNumbers = 40;
+		const fontSizeRedNumbers = 33;
+		const fontSizeWhiteNumbers = 43;
 
 		// ticks text
 		lg.selectAll('text')
@@ -180,7 +180,7 @@ class SpeedGauge extends React.Component<SpeedGaugeProps, {}> {
 		tg.append('path')
 			.attr('d', innerArc as any)
 			.attr('stroke', colors[0])
-			.attr('stroke-width', '2')
+			.attr('stroke-width', '5')
 			.attr('fill', 'url(#gradient1)')
 			.attr('z-index', '10');
 	
@@ -188,7 +188,7 @@ class SpeedGauge extends React.Component<SpeedGaugeProps, {}> {
 		this.speedText = tg
 			.append('text')
 			.text('0')
-			.attr('font-size', '80')
+			.attr('font-size', '160')
 			.attr('text-anchor', 'middle')
 			.attr('fill', colors[2])
 			.attr('x', '0')
@@ -199,7 +199,7 @@ class SpeedGauge extends React.Component<SpeedGaugeProps, {}> {
 		// km/h text
 		tg.append('text')
 			.text('km/h')
-			.attr('font-size', '50')
+			.attr('font-size', '70')
 			.attr('text-anchor', 'middle')
 			.attr('fill', colors[2])
 			.attr('x', '0')
