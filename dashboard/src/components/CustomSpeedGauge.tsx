@@ -2,24 +2,24 @@ import React from "react";
 import * as d3 from 'd3';
 import { degToRad, scale } from "../utils/circleUtils";
 
-interface RpmGaugeProps {
-	rpm: number;
+interface CustomSpeedGaugeProps {
+	speed: number;
 };
 
-class RPMGauge extends React.Component <RpmGaugeProps, {}>{
-	renderd: boolean = false;
+class CustomSpeedGauge extends React.Component <CustomSpeedGaugeProps, {}>{
+    renderd: boolean = false;
 	myRef: React.RefObject<HTMLInputElement>;
 	needle!: d3.Selection<SVGPathElement, number[][], null, undefined>;
-    rpmText!: d3.Selection<SVGTextElement, unknown, null, undefined>;
+    speedText!: d3.Selection<SVGTextElement, unknown, null, undefined>;
 
 	radiusDial    : number =  450;
 	minValueDial  : number =    0;
 	maxValueDial  : number =   80;
-	minAngleDial  : number = -160;
-	maxAngleDial  : number =   90;
+	minAngleDial  : number = -140;
+	maxAngleDial  : number =  140;
 	angleRangeDial: number = this.maxAngleDial - this.minAngleDial;
 
-	constructor(props: RpmGaugeProps) {
+	constructor(props: CustomSpeedGaugeProps) {
 		super(props);
 		this.myRef = React.createRef();
 	}
@@ -29,7 +29,7 @@ class RPMGauge extends React.Component <RpmGaugeProps, {}>{
 			return;
 		}
 
-		const svg = d3.select(this.myRef.current).append('svg').attr('width', `${this.radiusDial*2}px`).attr('height', `${this.radiusDial*2}px`);
+        const svg = d3.select(this.myRef.current).append('svg').attr('width', `${this.radiusDial*2}px`).attr('height', `${this.radiusDial*2}px`);
         const g = svg.append('g').attr('transform', `translate(${this.radiusDial}, ${this.radiusDial})`);
 
         const colors = ['#D1D1D1', '#AFAFAF', '#FFFFFF', '#FD3104', '#171717', '#0A0A0A'];
@@ -77,9 +77,7 @@ class RPMGauge extends React.Component <RpmGaugeProps, {}>{
 
         // ticks
         const lg = svg.append('g').attr('class', 'label').attr('transform', `translate(${this.radiusDial}, ${this.radiusDial})`);
-        const minAngle = -160;
-        const maxAngle = 90;
-        const angleRange = maxAngle - minAngle;
+        const angleRangeDial = this.maxAngleDial - this.minAngleDial;
 
         const ticks = ticksData
             .reduce((acc, current, index) => {
@@ -109,7 +107,7 @@ class RPMGauge extends React.Component <RpmGaugeProps, {}>{
             .attr('transform', (d: number) => {
                 const scale = d3.scaleLinear().range([0, 1]).domain([0, 80]);
                 const ratio = scale(d);
-                const newAngle = minAngle + ratio * angleRange;
+                const newAngle = this.minAngleDial + ratio * angleRangeDial;
                 const deviation = d % 5 === 0 ? paddindToOuterCircleShortTicks : paddindToOuterCircleLongTicks;
                 return `rotate(${newAngle}) translate(0, ${deviation - this.radiusDial})`;
             })
@@ -127,12 +125,12 @@ class RPMGauge extends React.Component <RpmGaugeProps, {}>{
             .attr('transform', (d: { value: number }) => {
                 const scale = d3.scaleLinear().range([0, 1]).domain([0, 80]);
                 const ratio = scale(d.value);
-                const newAngle = degToRad(minAngle + ratio * angleRange);
+                const newAngle = degToRad(this.minAngleDial + ratio * angleRangeDial);
                 const y = (paddingumbersToOuterCircle - this.radiusDial) * Math.cos(newAngle);
                 const x = -1 * (paddingumbersToOuterCircle - this.radiusDial) * Math.sin(newAngle);
                 return `translate(${x}, ${y + 7})`;
             })
-            .text((d: { value: number }) => (d.value !== 0 ? d.value / 10 : ''))
+            .text((d: { value: number }) => (d.value !== 0 ? d.value : ''))
             .attr('fill', (d: { value: number }) => (d.value >= 70 ? colors[3] : colors[2]))
             .attr('font-size', `${fontSizeNumbers}`)
             .attr('text-anchor', 'middle');
@@ -176,8 +174,9 @@ class RPMGauge extends React.Component <RpmGaugeProps, {}>{
             .attr('fill', 'url(#gradient1)')
             .attr('z-index', '10');
 
-        // big text in center
-        this.rpmText = tg.append('text')
+        // Speed value
+        this.speedText = tg
+			.append('text')
 			.text('0')
 			.attr('font-size', '160')
 			.attr('text-anchor', 'middle')
@@ -186,41 +185,17 @@ class RPMGauge extends React.Component <RpmGaugeProps, {}>{
 			.attr('y', '25px')
 			.style('position', 'absolute')
 			.style('z-index', '10');
-
-        // rpm x 1000 text
-        tg.append('text')
-            .text('1/min')
-            .attr('font-size', '50')
-            .attr('text-anchor', 'middle')
-            .attr('fill', colors[2])
-            .attr('x', '0')
-            .attr('y', '110px')
-            .style('position', 'absolute')
-            .style('z-index', '10');
-
-        // // lights icon
-        // tg.append('image')
-        //     .attr('xlink:href', '/assets/images/lights.svg')
-        //     // .attr('x', '0px')
-        //     // .attr('y', '340px')
-        //     .attr('width', '35px')
-        //     .attr('height', '35px');
-
-        // // seat belt icon
-        // tg.append('image')
-        //     .attr('xlink:href', '/assets/images/seat-belt.svg')
-        //     .attr('x', '56px')
-        //     .attr('y', '120px')
-        //     .attr('width', '30px')
-        //     .attr('height', '30px');
-
-        // // rear window defrost icon
-        // tg.append('image')
-        //     .attr('xlink:href', '/assets/images/rear-window-defrost.svg')
-        //     .attr('x', '95px')
-        //     .attr('y', '95px')
-        //     .attr('width', '30px')
-        //     .attr('height', '30px');
+	
+		// km/h text
+		tg.append('text')
+			.text('km/h')
+			.attr('font-size', '70')
+			.attr('text-anchor', 'middle')
+			.attr('fill', colors[2])
+			.attr('x', '0')
+			.attr('y', '110px')
+			.style('position', 'absolute')
+			.style('z-index', '10');
 
         this.renderd = true;
     }
@@ -231,18 +206,15 @@ class RPMGauge extends React.Component <RpmGaugeProps, {}>{
 		}
 	  
         const refreshRate = 10;
-		const minAngle = -160;
-        const maxAngle = 90;
-        const angleRange = maxAngle - minAngle;
-        const angle = minAngle + scale(this.props.rpm, 8000) * angleRange;
-
-		this.rpmText.text(this.props.rpm);
-
-        d3.transition()
-            .select(() => this.needle.node())
-            .duration(refreshRate)
-            .ease(d3.easeCubicInOut)
-            .attr('transform', `rotate(${angle})`);
+        const angle = this.minAngleDial + scale(this.props.speed, 80) * this.angleRangeDial;
+	
+		this.speedText.text(this.props.speed);
+	
+		d3.transition()
+			.select(() => this.needle.node())
+			.duration(refreshRate)
+			.ease(d3.easeCubicInOut)
+			.attr('transform', `rotate(${angle})`);
 	}
 
     render() {
@@ -250,4 +222,4 @@ class RPMGauge extends React.Component <RpmGaugeProps, {}>{
     }
 }
 
-export default RPMGauge;
+export default CustomSpeedGauge;

@@ -1,6 +1,6 @@
 import React from "react";
 import * as d3 from 'd3';
-import { degToRad, scale } from "../utils/circleUtils";
+import { degToRad, scale } from "../src/utils/circleUtils";
 import cssClasses from './css/SpeedGauge.module.css';
 
 interface SpeedGaugeProps {
@@ -30,24 +30,33 @@ class SpeedGauge extends React.Component<SpeedGaugeProps, {}> {
 
         const colors = ['#D1D1D1', '#AFAFAF', '#FFFFFF', '#FD3104', '#171717', '#0A0A0A'];
         const ticksData = [
-            { value: 0  , visible: false, color: '#FFFFFF' },
-            { value: 20 , visible: false, color: '#FFFFFF' },
-            { value: 30 , visible: false, color: '#FD3104' },
-            { value: 40 , visible: false, color: '#FFFFFF' },
-            { value: 50 , visible: false, color: '#FD3104' },
-            { value: 60 , visible: false, color: '#FFFFFF' },
-            { value: 80 , visible: false, color: '#FFFFFF' },
-            { value: 100, visible: false, color: '#FFFFFF' },
-            { value: 120, visible: false, color: '#FFFFFF' },
-            { value: 140, visible: false, color: '#FFFFFF' },
-            { value: 160, visible: false, color: '#FFFFFF' },
-            { value: 180, visible: false, color: '#FFFFFF' },
-            { value: 200, visible: false, color: '#FFFFFF' },
-            { value: 220, visible: false, color: '#FFFFFF' },
-            { value: 240, visible: false, color: '#FFFFFF' },
-            { value: 260, visible: false, color: '#FFFFFF' },
-            { value: 280, visible: false, color: '#FFFFFF' },
-            { value: 300, visible: false, color: '#FFFFFF' }
+			{ value: 0  , visible: false, color: '#FFFFFF'},
+            { value: 10 , visible: false, color: '#FFFFFF'},
+            { value: 20 , visible: false, color: '#FFFFFF'},
+            { value: 30 , visible: false, color: '#FFFFFF'},
+            { value: 40 , visible: false, color: '#FFFFFF'},
+            { value: 50 , visible: false, color: '#FFFFFF'},
+            { value: 60 , visible: false, color: '#FFFFFF'},
+            { value: 70 , visible: false, color: '#FFFFFF'},
+            { value: 80 , visible: false, color: '#FFFFFF'}
+            // { value: 0  , visible: false, color: '#FFFFFF' },
+            // { value: 20 , visible: false, color: '#FFFFFF' },
+            // { value: 30 , visible: false, color: '#FD3104' },
+            // { value: 40 , visible: false, color: '#FFFFFF' },
+            // { value: 50 , visible: false, color: '#FD3104' },
+            // { value: 60 , visible: false, color: '#FFFFFF' },
+            // { value: 80 , visible: false, color: '#FFFFFF' },
+            // { value: 100, visible: false, color: '#FFFFFF' },
+            // { value: 120, visible: false, color: '#FFFFFF' },
+            // { value: 140, visible: false, color: '#FFFFFF' },
+            // { value: 160, visible: false, color: '#FFFFFF' },
+            // { value: 180, visible: false, color: '#FFFFFF' },
+            // { value: 200, visible: false, color: '#FFFFFF' },
+            // { value: 220, visible: false, color: '#FFFFFF' },
+            // { value: 240, visible: false, color: '#FFFFFF' },
+            // { value: 260, visible: false, color: '#FFFFFF' },
+            // { value: 280, visible: false, color: '#FFFFFF' },
+            // { value: 300, visible: false, color: '#FFFFFF' }
         ];
 
         const radius = dialRadius; // width / 2

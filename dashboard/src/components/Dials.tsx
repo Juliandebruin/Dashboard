@@ -1,6 +1,6 @@
 import React from "react";
 import RPMGauge from "./RPMGauge";
-import SpeedGauge from "./Speedgauge";
+import CustomSpeedGauge from "./CustomSpeedGauge";
 import cssClasses from './css/DisplayGauge.module.css';
 
 interface MyState {
@@ -24,21 +24,21 @@ class Dials extends React.Component <{}, MyState> {
 	}
 
 	changeRpmDial() {
-		if (this.state.rpm >= 6000) {
+		if (this.state.rpm >= 8000) {
 			this.setState({ acceleratingRpm: false });
 		} else if (this.state.rpm <= 0) {
 			this.setState({ acceleratingRpm: true });
 		}
 
 		if (this.state.acceleratingRpm) {
-			this.setState({ rpm: this.state.rpm + 45 });
+			this.setState({ rpm: this.state.rpm + 50 });
 		} else {
-			this.setState({ rpm: this.state.rpm - 45 });
+			this.setState({ rpm: this.state.rpm - 50 });
 		}
 	}
 
 	changeSpeedDial() {
-		if (this.state.speed === 300) {
+		if (this.state.speed === 80) {
 			this.setState({ acceleratingSpeed: false });
 		} else if (this.state.speed === 0) {
 			this.setState({ acceleratingSpeed: true });
@@ -61,8 +61,8 @@ class Dials extends React.Component <{}, MyState> {
 	render() {
 		return (
 			<div className={cssClasses.layoutDiv}>
-				<div className={cssClasses.dialLeft }><RPMGauge   rpm   = {this.state.rpm  }/></div>
-				<div className={cssClasses.dialRight}><SpeedGauge speed = {this.state.speed}/></div>
+				<div className={cssClasses.dialRight}><RPMGauge 		rpm   = {this.state.rpm  }/></div>
+				<div className={cssClasses.dialLeft }><CustomSpeedGauge speed = {this.state.speed}/></div>
 			</div>
 		);
 	}
