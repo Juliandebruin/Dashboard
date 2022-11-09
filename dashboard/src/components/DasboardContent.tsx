@@ -22,7 +22,7 @@ class DasboardContent extends React.Component <{}, MyState> {
 		this.state = { 
 			rpm: 0,
 			speed: 0,
-			percentage: 0,
+			percentage: 10,
 			acceleratingRpm: false,
 			acceleratingSpeed: false,
 			increasingPercentage: false
@@ -60,7 +60,7 @@ class DasboardContent extends React.Component <{}, MyState> {
 	changeBatteryPercentage() {
 		if (this.state.percentage >= 100) {
 			this.setState({ increasingPercentage: false });
-		} else if (this.state.percentage <= 0) {
+		} else if (this.state.percentage <= 10) {
 			this.setState({ increasingPercentage: true });
 		}
 

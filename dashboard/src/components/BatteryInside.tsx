@@ -57,8 +57,6 @@ class CustomSpeedGauge extends React.Component <CustomSpeedGaugeProps, {}>{
             .ease(d3.easeCubicInOut)
 			.attr('fill', fillColour)
 			.attr("width", `${this.props.percentage*2.2}px`);
-
-		console.log(this.props.percentage);
 	}
 
     render() {
