@@ -1,16 +1,20 @@
 import React from "react";
+import BatteryImage from "./BatteryImage";
+import BatteryInside from "./BatteryInside";
 import RPMGauge from "./RPMGauge";
 import CustomSpeedGauge from "./CustomSpeedGauge";
-import cssClasses from './css/DisplayGauge.module.css';
+import cssClasses from './css/Layout.module.css';
 
 interface MyState {
 	rpm: number;
 	speed: number;
+	percentage: number;
 	acceleratingSpeed: boolean;
 	acceleratingRpm: boolean;
+	increasingPercentage: boolean;
 }
 
-class Dials extends React.Component <{}, MyState> {
+class DasboardContent extends React.Component <{}, MyState> {
 	intervalFunction: NodeJS.Timer | null = null;
 
 	constructor(props: any) {
@@ -18,8 +22,10 @@ class Dials extends React.Component <{}, MyState> {
 		this.state = { 
 			rpm: 0,
 			speed: 0,
+			percentage: 0,
 			acceleratingRpm: false,
-			acceleratingSpeed: false 
+			acceleratingSpeed: false,
+			increasingPercentage: false
 		};
 	}
 
@@ -51,21 +57,38 @@ class Dials extends React.Component <{}, MyState> {
 		}
 	}
 
+	changeBatteryPercentage() {
+		if (this.state.percentage >= 100) {
+			this.setState({ increasingPercentage: false });
+		} else if (this.state.percentage <= 0) {
+			this.setState({ increasingPercentage: true });
+		}
+
+		if (this.state.increasingPercentage) {
+			this.setState({ percentage: this.state.percentage + 0.3 });
+		} else {
+			this.setState({ percentage: this.state.percentage - 0.3 });
+		}
+	}
+
 	componentDidMount() {
 		this.intervalFunction = setInterval(() => {
 			this.changeRpmDial();
 			this.changeSpeedDial();
+			this.changeBatteryPercentage();
 		}, 25);
 	}
 	
 	render() {
 		return (
 			<div className={cssClasses.layoutDiv}>
-				<div className={cssClasses.dialRight}><RPMGauge 		rpm   = {this.state.rpm  }/></div>
-				<div className={cssClasses.dialLeft }><CustomSpeedGauge speed = {this.state.speed}/></div>
+				<div className={cssClasses.batteryImage }><BatteryImage											/></div>
+				<div className={cssClasses.batteryInside}><BatteryInside 	percentage = {this.state.percentage}/></div>
+				<div className={cssClasses.dialRight	}><RPMGauge 	 	rpm 	   = {this.state.rpm	   }/></div>
+				<div className={cssClasses.dialLeft 	}><CustomSpeedGauge speed 	   = {this.state.speed	   }/></div>
 			</div>
 		);
 	}
 }
 
-export default Dials;
+export default DasboardContent;

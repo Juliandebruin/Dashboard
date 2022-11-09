@@ -14,3 +14,15 @@
     bottom: 50px;
     right: 75px;
 }
+
+.batteryImage {
+	position: absolute;
+	top: 350px;
+	left: 1790px;
+}
+
+.batteryInside {
+	position: absolute;
+	top: 385px;
+	left: 1820px;
+}

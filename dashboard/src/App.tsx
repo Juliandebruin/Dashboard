@@ -1,5 +1,5 @@
 import "./App.css";
-import Dials from "./components/Dials";
+import Dials from "./components/DasboardContent";
 
 function App() {
 	return (
