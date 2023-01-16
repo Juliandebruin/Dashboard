@@ -5,10 +5,15 @@ import RPMGauge from "./RPMGauge";
 import CustomSpeedGauge from "./CustomSpeedGauge";
 import cssClasses from './css/Layout.module.css';
 
+import io from 'socket.io-client';
+
+const socket = io();
+
 interface MyState {
 	rpm: number;
 	speed: number;
 	percentage: number;
+	connected: boolean;
 	acceleratingSpeed: boolean;
 	acceleratingRpm: boolean;
 	increasingPercentage: boolean;
@@ -23,10 +28,39 @@ class DasboardContent extends React.Component <{}, MyState> {
 			rpm: 0,
 			speed: 0,
 			percentage: 10,
+			connected: false,
 			acceleratingRpm: false,
 			acceleratingSpeed: false,
 			increasingPercentage: false
 		};
+	}
+
+	check(value: number) {
+		return (isNaN(value) ? 0 : value);
+	}
+
+	setUpSocketIo() {
+		socket.on('connect', () => {
+			this.setState({connected: true});
+			console.log('connected');
+		});
+	
+		socket.on('disconnect', () => {
+			this.setState({connected: false });
+			console.log('disconnected');
+		});
+
+		socket.on('rpm', (data) => {
+			this.setState({rpm: this.check(data.rpm)});
+		});
+		
+		socket.on('speed', (data) => {
+			this.setState({speed: this.check(data.speed)});
+		});
+
+		socket.on('battery', (data) => {
+			this.setState({percentage: this.check(data.battery)});
+		});
 	}
 
 	changeRpmDial() {
@@ -72,11 +106,11 @@ class DasboardContent extends React.Component <{}, MyState> {
 	}
 
 	componentDidMount() {
-		this.intervalFunction = setInterval(() => {
-			this.changeRpmDial();
-			this.changeSpeedDial();
-			this.changeBatteryPercentage();
-		}, 25);
+		this.setUpSocketIo();
+	}
+
+	componentDidUpdate() {
+		console.log(this.state);
 	}
 	
 	render() {

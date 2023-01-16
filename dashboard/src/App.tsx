@@ -1,11 +1,11 @@
 import "./App.css";
-import Dials from "./components/DasboardContent";
+import DasboardContent from "./components/DasboardContent";
 
 function App() {
 	return (
 		<div className="App">
 			<header className="App-header">
-				<Dials/>
+				<DasboardContent/>
 			</header>
 		</div>
 	);
