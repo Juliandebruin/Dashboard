@@ -1,10 +1,8 @@
-import socketio
 import time
+import socketio
 
 sio = socketio.Server()
-app = socketio.WSGIApp(sio, static_files={
-    '/': './build/'
-})
+app = socketio.WSGIApp(sio, 'http://localhost:3000')
 
 @sio.event
 def connect(sid, environ):
@@ -16,10 +14,3 @@ def connect(sid, environ):
 @sio.event
 def disconnect(sid):
     print(sid, 'disconnected')
-
-# while True:
-    
-#     sio.emit('speed'  , {'speed':   45}, to=sid)
-#     sio.emit('battery', {'battery': 80}, to=sid)
-#     print('send update')
-#     sio.sleep(1)

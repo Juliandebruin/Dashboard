@@ -12,8 +12,8 @@ commitLine.txt
 /coverage
 
 # production
-/build
-/__pycache__
+__pycache__/
+# /build This version of react generates a wrong HTML file there for I am uploading the build folder to git
 
 # misc
 .DS_Store
