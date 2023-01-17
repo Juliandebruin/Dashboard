@@ -2,7 +2,9 @@ import time
 import socketio
 
 sio = socketio.Server()
-app = socketio.WSGIApp(sio, 'http://localhost:3000')
+app = socketio.WSGIApp(sio, static_files = {
+    '/': './build/',
+})
 
 @sio.event
 def connect(sid, environ):
