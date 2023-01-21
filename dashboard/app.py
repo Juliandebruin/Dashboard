@@ -5,6 +5,8 @@ import socketio
 priority = 1
 pollingTime = 1
 
+reading = "FALSE"
+
 ser = serial.Serial(
 	port='/dev/ttyS0',
 	baudrate = 9600,
@@ -19,20 +21,6 @@ app = socketio.WSGIApp(sio, static_files = {
     '/': './build/',
 })
 
-def parse_data(sid):
-    line = ser.readline()
-    data = line.decode('utf-8')
-    if len(data) > 0:
-        if data[0] == '{' and data[-3] == '}':
-            try:
-                jsonObj = json.loads(data)
-                print('Send data...', data)
-                sio.emit('rpm'    , {'rpm'    : jsonObj['rpm'    ]}, to=sid)
-                sio.emit('speed'  , {'speed'  : jsonObj['speed'  ]}, to=sid)
-                sio.emit('battery', {'battery': jsonObj['battery']}, to=sid)
-            except:
-                print('Not a json package: ', data)
-
 @sio.event
 def connect(sid, environ):
     print(sid, 'connected')
@@ -40,3 +28,26 @@ def connect(sid, environ):
 @sio.event
 def disconnect(sid):
     print(sid, 'disconnected')
+
+def readline():
+    data = "a"
+    global reading
+    if reading == "FALSE":
+        reading = "TRUE"
+        line = ser.readline()
+        data = line.decode('utf-8')
+        reading = "FALSE"
+    return data
+
+@sio.event
+def request_data(sid, none):
+    print('Loading data...')
+    data = readline()
+    try:
+        jsonObj = json.loads(data)
+        return data
+    except:
+        print('Error not a json string: ', data)
+        # data = {}
+        data = {"rpm"    : "3500","speed"  :   "75","battery":   "80","pin"    : "1050","pout"   : "1000"}
+        return data
