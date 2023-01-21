@@ -13,6 +13,8 @@ interface MyState {
 	rpm: number;
 	speed: number;
 	percentage: number;
+	pin: number;
+	pout: number;
 	connected: boolean;
 	acceleratingSpeed: boolean;
 	acceleratingRpm: boolean;
@@ -28,6 +30,8 @@ class DasboardContent extends React.Component <{}, MyState> {
 			rpm: 0,
 			speed: 0,
 			percentage: 10,
+			pin: 0,
+			pout: 0,
 			connected: false,
 			acceleratingRpm: false,
 			acceleratingSpeed: false,
@@ -48,18 +52,6 @@ class DasboardContent extends React.Component <{}, MyState> {
 		socket.on('disconnect', () => {
 			this.setState({connected: false });
 			console.log('disconnected');
-		});
-
-		socket.on('rpm', (data) => {
-			this.setState({rpm: this.check(data.rpm)});
-		});
-		
-		socket.on('speed', (data) => {
-			this.setState({speed: this.check(data.speed)});
-		});
-
-		socket.on('battery', (data) => {
-			this.setState({percentage: this.check(data.battery)});
 		});
 	}
 
@@ -105,12 +97,34 @@ class DasboardContent extends React.Component <{}, MyState> {
 		}
 	}
 
+	requestData() {
+		if (this.state.connected) {
+			console.log('Requesting data...');
+			socket.emit('request_data', null, (data: any) => {
+				this.setState({
+					rpm: this.check(data.rpm),
+					speed: this.check(data.speed),
+					percentage: this.check(data.battery),
+					pin: this.check(data.pin),
+					pout: this.check(data.pout)
+				});
+			});		
+		}
+	}
+
 	componentDidMount() {
 		this.setUpSocketIo();
+		this.intervalFunction = setInterval(this.requestData, 1000);
 	}
 
 	componentDidUpdate() {
 		console.log(this.state);
+	}
+
+	componentWillUnmount() {
+		if (this.intervalFunction !== null) {
+			clearInterval(this.intervalFunction);
+		}
 	}
 	
 	render() {
