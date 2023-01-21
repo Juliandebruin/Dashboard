@@ -17,6 +17,17 @@ First update the raspi config the turn on the following options:\
 3. Turn on boot to usb if you use one 
 4. Reboot the pi if asked
 
+Remove the following part of the first line from /boot/cmdline.txt\
+`console=serial0,115200 console=tty1`
+
+The file can be edited with `sudo nano /boot/cmdline.txt`
+
+## Configuring the serial port
+If you can not connect to the serial port, you can try the following commands:\
+`sudo chmod 666 /dev/ttyS0`
+
+⚠️ chmod 666 gives all rights so this is definitly not a secure way to do this.
+
 ## Installing the important packages
 `sudo apt-get install git python pip gunicorn chromium -y`
 
@@ -39,3 +50,9 @@ First update the raspi config the turn on the following options:\
 `npm install`\
 `npm run build`\
 `pip install -r requirements.txt`
+
+## ⚠️ WARNING ⚠️
+
+If you build with the `npm run build` command, the html file will be replace by a generated one.\
+This file breaks the css so after each build replace the seccond meta tag with the following line:\
+`<meta content="width=device-width; initial-scale=1; maximum-scale=1; user-scalable=0; name=viewport"/>`
