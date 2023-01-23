@@ -40,10 +40,6 @@ class DasboardContent extends React.Component <{}, MyState> {
 		};
 	}
 
-	check(value: number) {
-		return (isNaN(value) ? 0 : value);
-	}
-
 	setUpSocketIo() {
 		socket.on('connect', () => {
 			this.setState({connected: true});
@@ -62,11 +58,11 @@ class DasboardContent extends React.Component <{}, MyState> {
 			socket.emit('request_data', {}, (data: any) => {
 				console.log("Requested data: ", data);
 				this.setState({
-					rpm: this.check(data.rpm),
-					speed: this.check(data.speed),
-					percentage: this.check(data.battery),
-					pin: this.check(data.pin),
-					pout: this.check(data.pout)
+					rpm        : (data.rpm 		  !== undefined ? data.rpm 		  : this.state.rpm		 ),
+					speed      : (data.speed  	  !== undefined ? data.speed 	  : this.state.speed	 ),
+					percentage : (data.percentage !== undefined ? data.percentage : this.state.percentage),
+					pin		   : (data.pin 		  !== undefined ? data.pin 		  : this.state.pin		 ),
+					pout	   : (data.pout 	  !== undefined ? data.pout 	  : this.state.pout		 )
 				});
 			});		
 		} else {
