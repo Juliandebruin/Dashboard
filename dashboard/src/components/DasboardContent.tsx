@@ -1,10 +1,12 @@
 import React from "react";
-import BatteryImage from "./BatteryImage";
-import BatteryInside from "./BatteryInside";
+import io from 'socket.io-client';
+import cssClasses from './css/Layout.module.css';
+
 import RPMGauge from "./RPMGauge";
 import CustomSpeedGauge from "./CustomSpeedGauge";
-import cssClasses from './css/Layout.module.css';
-import io from 'socket.io-client';
+import Battery from "./Battery";
+import PowerIn from "./PowerIn";
+import PowerOut from "./PowerOut";
 
 const socket = io();
 
@@ -28,7 +30,7 @@ class DasboardContent extends React.Component <{}, MyState> {
 		this.state = { 
 			rpm: 0,
 			speed: 0,
-			percentage: 10,
+			percentage: 0,
 			pin: 0,
 			pout: 0,
 			connected: false,
@@ -67,6 +69,8 @@ class DasboardContent extends React.Component <{}, MyState> {
 					pout: this.check(data.pout)
 				});
 			});		
+		} else {
+			console.log('Not connected');
 		}
 	}
 
@@ -76,12 +80,14 @@ class DasboardContent extends React.Component <{}, MyState> {
 	}
 
 	componentDidUpdate() {
-		console.log("Updating...");
-		console.log("RPM: ", this.state.rpm);
-		console.log("Speed: ", this.state.speed);
-		console.log("Battery: ", this.state.percentage);
-		console.log("Pin: ", this.state.pin);
-		console.log("Pout: ", this.state.pout);
+		console.log(
+			`Updating...\n`						  +
+			`RPM:     ${this.state.rpm       }\n` +
+			`Speed:   ${this.state.speed     }\n` +
+			`Battery: ${this.state.percentage}\n` +
+			`Pin:     ${this.state.pin       }\n` +
+			`Pout:    ${this.state.pout      }\n` 
+		);
 	}
 
 	componentWillUnmount() {
@@ -92,11 +98,12 @@ class DasboardContent extends React.Component <{}, MyState> {
 	
 	render() {
 		return (
-			<div className={cssClasses.layoutDiv}>
-				<div className={cssClasses.batteryImage }><BatteryImage											/></div>
-				<div className={cssClasses.batteryInside}><BatteryInside 	percentage = {this.state.percentage}/></div>
-				<div className={cssClasses.dialRight	}><RPMGauge 	 	rpm 	   = {this.state.rpm	   }/></div>
-				<div className={cssClasses.dialLeft 	}><CustomSpeedGauge speed 	   = {this.state.speed	   }/></div>
+			<div>
+				<div className={cssClasses.powerIn 	}><PowerIn			power 	   = {this.state.pin	   }/></div>
+				<div className={cssClasses.powerOut	}><PowerOut			power 	   = {this.state.pout	   }/></div>
+				<div className={cssClasses.battery  }><Battery      	percentage = {this.state.percentage}/></div>
+				<div className={cssClasses.dialRight}><RPMGauge 	 	rpm 	   = {this.state.rpm	   }/></div>
+				<div className={cssClasses.dialLeft }><CustomSpeedGauge speed 	   = {this.state.speed	   }/></div>
 			</div>
 		);
 	}

@@ -34,7 +34,7 @@ class CustomSpeedGauge extends React.Component <CustomSpeedGaugeProps, {}>{
 
         const colors = ['#D1D1D1', '#AFAFAF', '#FFFFFF', '#FD3104', '#171717', '#0A0A0A'];
         const ticksData = [
-            { value: 0 },
+            { value: 0  },
             { value: 10 },
             { value: 20 },
             { value: 30 },
@@ -153,7 +153,7 @@ class CustomSpeedGauge extends React.Component <CustomSpeedGaugeProps, {}>{
             .attr('transform', `translate(${this.radiusDial}, ${this.radiusDial})`)
             .attr('z-index', '1');
 
-        this.needle = ng.append('path').attr('d', needleLine as any).attr('transform', `rotate(${-160})`);
+        this.needle = ng.append('path').attr('d', needleLine as any).attr('transform', `rotate(${this.minAngleDial})`);
 
         // inner circle
         const tg = svg.append('g').attr('transform', `translate(${this.radiusDial}, ${this.radiusDial})`);
