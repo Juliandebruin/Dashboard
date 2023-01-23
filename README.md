@@ -48,10 +48,11 @@ If you can not connect to the serial port, you can try the following commands:\
 `git clone https://github.com/Juliandebruin/Dashboard.git`
 
 `cd Dashboard`\
-`git checkout dev`\
-`cd dashboard`
+`git checkout dev`
 
 ## Installing the node modules and the python modules
+This will take some time, it will be the fastest when no programs are open on the pi.
+
 `npm install`\
 `npm run build`\
 `pip install -r requirements.txt`
