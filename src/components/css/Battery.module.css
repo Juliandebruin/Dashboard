@@ -1,0 +1,11 @@
+.batteryImage{
+	position: absolute;
+	top: 500px;
+	left: 1790px;
+}
+
+.batteryInside {
+	position: absolute;
+	top: 535px;
+	left: 1820px;
+}
