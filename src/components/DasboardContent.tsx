@@ -57,13 +57,19 @@ class DasboardContent extends React.Component <{}, MyState> {
 			console.log('Requesting data...');
 			socket.emit('request_data', {}, (data: any) => {
 				console.log("Requested data: ", data);
-				this.setState({
-					rpm        : (data.rpm 		  !== undefined ? data.rpm 		  : this.state.rpm		 ),
-					speed      : (data.speed  	  !== undefined ? data.speed 	  : this.state.speed	 ),
-					percentage : (data.percentage !== undefined ? data.percentage : this.state.percentage),
-					pin		   : (data.pin 		  !== undefined ? data.pin 		  : this.state.pin		 ),
-					pout	   : (data.pout 	  !== undefined ? data.pout 	  : this.state.pout		 )
-				});
+				try {
+					data = JSON.parse(data);
+					this.setState({
+						rpm        : (data.rpm 	   !== undefined ? +data.rpm 	 : this.state.rpm		),
+						speed      : (data.speed   !== undefined ? +data.speed 	 : this.state.speed	    ),
+						percentage : (data.battery !== undefined ? +data.battery : this.state.percentage),
+						pin		   : (data.pin 	   !== undefined ? +data.pin 	 : this.state.pin		),
+						pout	   : (data.pout    !== undefined ? +data.pout 	 : this.state.pout	    )
+					});
+				}
+				catch (e) {
+					console.log('Error parsing data');
+				}
 			});		
 		} else {
 			console.log('Not connected');

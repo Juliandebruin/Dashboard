@@ -30,7 +30,7 @@ def disconnect(sid):
     print(sid, 'disconnected')
 
 def readline():
-    data = "a"
+    data = ""
     global reading
     if reading == "FALSE":
         reading = "TRUE"
@@ -43,11 +43,10 @@ def readline():
 def request_data(sid, none):
     print('Loading data...')
     data = readline()
+    print('Data loaded: ', data)
     try:
         jsonObj = json.loads(data)
         return data
     except:
         print('Error not a json string: ', data)
-        # data = {}
-        data = {"rpm"    : "3500","speed"  :   "75","battery":   "80","pin"    : "1050","pout"   : "1000"}
-        return data
+        return {}

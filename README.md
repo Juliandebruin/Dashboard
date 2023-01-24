@@ -28,10 +28,8 @@ Remove the following part of the first line from /boot/cmdline.txt\
 The file can be edited with `sudo nano /boot/cmdline.txt`
 
 ## Configuring the serial port
-If you can not connect to the serial port, you can try the following commands:\
-`sudo chmod 666 /dev/ttyS0`
-
-⚠️ chmod 666 gives all rights so this is definitly not a secure way to do this.
+If you can not connect to the serial port, add your user to the dialout group:\
+`sudo adduser ${USER} dialout`
 
 ## Installing the important packages
 `sudo apt-get install git python pip gunicorn chromium -y`
